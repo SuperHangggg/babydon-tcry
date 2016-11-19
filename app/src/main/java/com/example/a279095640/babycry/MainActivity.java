@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     //http://localhost/xampp/android/login.php
                     //区别1、url的路径不同
-                    String path = "http://127.0.0.1:8080/login.php";
+                    String path = "http://192.168.1.113:8080/login.php";
                     URL url = new  URL(path);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     //区别2、请求方式post
@@ -93,6 +95,15 @@ public class MainActivity extends AppCompatActivity {
                         Message mas= Message.obtain();
                         mas.what = SUCCESS;
                         mas.obj = result;
+                        handler.sendMessage(mas);
+                        String suc = acc+"已经成功登录";
+                        result= URLEncoder.encode(result,"UTF-8");
+                        result =result.substring(9,result.length()-2);
+                        suc   = URLEncoder.encode(suc,"UTF-8");
+                        if(suc.equals(result))
+                        {
+                            finish();
+                        }
                         handler.sendMessage(mas);
 
                     }else{
