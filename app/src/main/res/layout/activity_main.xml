@@ -27,6 +27,8 @@
         android:text="忘记密码"
         android:layout_width="wrap_content"
         android:textSize="60px"
+        android:clickable="true"
+        android:onClick="findpass"
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
         android:layout_alignParentRight="true"

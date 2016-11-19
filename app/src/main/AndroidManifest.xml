@@ -19,7 +19,8 @@
         </activity>
         <activity android:name=".register" />
         <activity android:name=".main" />
-        <activity android:name=".newbabyfile"></activity>
+        <activity android:name=".newbabyfile" />
+        <activity android:name=".forget"></activity>
     </application>
 
 </manifest>
