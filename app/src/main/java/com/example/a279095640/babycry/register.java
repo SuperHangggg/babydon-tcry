@@ -1,56 +1,64 @@
 package com.example.a279095640.babycry;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
-import android.widget.EditText;
-import android.widget.Toast;
 import java.net.URLEncoder;
 
-
-public class MainActivity extends AppCompatActivity {
+public class register extends AppCompatActivity {
     protected static final int ERROR = 2;
     protected static final int SUCCESS = 1;
-    private EditText account;
-    private EditText password;
+    private EditText register_username;
+    private EditText register_password;
+    private EditText confirm_password;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+        register_username=(EditText)findViewById(R.id.register_username);
+        register_password=(EditText)findViewById(R.id.register_password);
+        confirm_password = (EditText)findViewById(R.id.confirm_password);
+    }
+
 
     private Handler handler = new Handler(){
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-                    Toast.makeText(MainActivity.this,(String)msg.obj, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(register.this,(String)msg.obj, Toast.LENGTH_SHORT).show();
 
                     break;
 
                 case ERROR:
-                    Toast.makeText(MainActivity.this,"登录失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(register.this,"注册失败", Toast.LENGTH_SHORT).show();
                     break;
 
             }
         };
     };
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        account = (EditText) findViewById(R.id.account);
-        password = (EditText) findViewById(R.id.password);
-
-
-    }
-    public void login(View view){
-        final String acc = account.getText().toString();
-        final String psd = password.getText().toString();
+    public void regist(View view){
+        final String acc = register_username.getText().toString();
+        final String psd = register_password.getText().toString();
+        final String confirm = confirm_password.getText().toString();
 
         if(TextUtils.isEmpty(acc)||TextUtils.isEmpty(psd)){
             Toast.makeText(this, "用户和密码不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!psd.equals(confirm)){
+            Toast.makeText(this, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
             return;
         }
         new Thread(){
@@ -58,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     //http://localhost/xampp/android/login.php
                     //区别1、url的路径不同
-                    String path = "http://192.168.1.113:8080/login.php";
+                    String path = "http://192.168.1.113:8080/register.php";
                     URL url = new  URL(path);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     //区别2、请求方式post
@@ -81,16 +89,14 @@ public class MainActivity extends AppCompatActivity {
                         mas.what = SUCCESS;
                         mas.obj = result;
                         handler.sendMessage(mas);
-                        String suc = acc+"已经成功登录";
+                        String suc = "注册成功";
                         result= URLEncoder.encode(result,"UTF-8");
                         result =result.substring(9,result.length()-2);
                         suc   = URLEncoder.encode(suc,"UTF-8");
                         if(suc.equals(result))
                         {
-                            Intent intent = new Intent(MainActivity.this, main.class);
-                            startActivity(intent);
+                            finish();
                         }
-
                     }else{
                         Message mas = Message.obtain();
                         mas.what = ERROR;
@@ -106,11 +112,4 @@ public class MainActivity extends AppCompatActivity {
         }.start();
 
     }
-    public void  click_register(View view){
-        Intent intent = new Intent(MainActivity.this, register.class);
-        startActivity(intent);
-    }
-
-
-
 }
