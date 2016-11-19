@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 public class main extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -14,6 +13,9 @@ public class main extends AppCompatActivity {
     }
     public void  create(View view){
         Intent intent = new Intent(main.this,newbabyfile.class);
+        String username = getIntent().getStringExtra("username");
+        intent.putExtra("username", username);
+        System.out.println(username);
         startActivity(intent);
     }
 }

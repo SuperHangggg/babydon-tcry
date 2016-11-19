@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                         if(suc.equals(result))
                         {
                             Intent intent = new Intent(MainActivity.this, main.class);
+                            intent.putExtra("username", acc);
                             startActivity(intent);
                         }
 
