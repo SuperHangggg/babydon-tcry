@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_record"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.a279095640.babycry.record">
+
+    <Button
+        android:text="开始录音"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startrecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="onClick"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="停止录音"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stoprecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="onClick"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="播放录音"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playrecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="onClick"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="下载录音"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/downloadrecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="regist"
+        android:layout_alignBaseline="@+id/uploadrecording"
+        android:layout_alignBottom="@+id/uploadrecording"
+        android:layout_toRightOf="@+id/stoprecording"
+        android:layout_toEndOf="@+id/stoprecording" />
+
+    <Button
+        android:text="上传录音"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uploadrecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="regist"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/textView8"
+        android:layout_alignEnd="@+id/textView8"
+        android:layout_marginBottom="22dp" />
+
+    <RadioGroup android:id="@+id/radioReasons"
+        android:contentDescription="原因"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioHungry"
+            android:text="饥饿"
+            android:textSize="38px"
+            >
+        </RadioButton>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:textSize="38px"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioSleepy"
+            android:text="困觉">
+        </RadioButton>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:textSize="38px"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioPee"
+            android:text="便溺">
+        </RadioButton>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:textSize="38px"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioPain"
+            android:text="疼痛">
+        </RadioButton>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:textSize="40px"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioOther"
+            android:text="其他">
+        </RadioButton>
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="其他原因请在此输入"
+        android:textSize="45px"
+        android:ems="10"
+        android:id="@+id/inputreason"
+        android:layout_below="@+id/radioReasons"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="请输入要上传录音的婴儿id"
+        android:textSize="45px"
+        android:ems="10"
+        android:id="@+id/uploadbabyid"
+        android:layout_above="@+id/textView8"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="哭泣原因"
+        android:textSize="60px"
+        android:textColor="#000000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView8"
+        android:layout_marginBottom="34dp"
+        android:layout_above="@+id/inputreason"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>

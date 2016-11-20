@@ -26,6 +26,7 @@ public class newbabyfile extends AppCompatActivity {
     private EditText babyid;
     private EditText weight;
     private EditText name;
+    private EditText week;
     private String birthday;
     private String sexstring;
     private String username;
@@ -39,6 +40,7 @@ public class newbabyfile extends AppCompatActivity {
         babyid = (EditText) findViewById(R.id.id);
         weight = (EditText) findViewById(R.id.weight);
         name = (EditText) findViewById(R.id.name);
+        week = (EditText) findViewById(R.id.preweek);
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         System.out.println(username);
@@ -105,8 +107,9 @@ public class newbabyfile extends AppCompatActivity {
         final String id = babyid.getText().toString();
         final String wt = weight.getText().toString();
         final String nm = name.getText().toString();
+        final String pregnentweeks = week.getText().toString();
 
-        if(TextUtils.isEmpty(btd)||TextUtils.isEmpty(sex)||TextUtils.isEmpty(id)||TextUtils.isEmpty(wt)||TextUtils.isEmpty(nm)){
+        if(TextUtils.isEmpty(btd)||TextUtils.isEmpty(sex)||TextUtils.isEmpty(id)||TextUtils.isEmpty(wt)||TextUtils.isEmpty(nm)||TextUtils.isEmpty(pregnentweeks)){
             Toast.makeText(this, "信息不完整！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -128,7 +131,7 @@ public class newbabyfile extends AppCompatActivity {
                     conn.setRequestProperty("User-Agent", "Mozilla/5.0(compatible;MSIE 9.0;Windows NT 6.1;Trident/5.0)");
                     //区别3、必须指定两个请求的参数
                     conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//请求的类型  表单数据
-                    String data = "&username="+acc+"&babyid="+id+"&birthdate="+btd+"&name="+URLEncoder.encode(nm,"UTF-8")+ "&sex="+URLEncoder.encode(sex,"UTF-8")+"&weight="+wt+"&button=";
+                    String data = "&username="+acc+"&babyid="+id+"&birthdate="+btd+"&name="+URLEncoder.encode(nm,"UTF-8")+ "&sex="+URLEncoder.encode(sex,"UTF-8")+"&weight="+wt+"&week="+pregnentweeks+"&button=";
                     System.out.println(acc);
                     System.out.println(id);
                     System.out.println(btd);

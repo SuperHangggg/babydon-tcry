@@ -3,6 +3,8 @@
     package="com.example.a279095640.babycry">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -20,7 +22,10 @@
         <activity android:name=".register" />
         <activity android:name=".main" />
         <activity android:name=".newbabyfile" />
-        <activity android:name=".forget"></activity>
+        <activity android:name=".forget" />
+        <activity android:name=".lookup" />
+        <activity android:name=".upload" />
+        <activity android:name=".record"></activity>
     </application>
 
 </manifest>

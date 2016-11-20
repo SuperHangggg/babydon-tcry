@@ -18,4 +18,18 @@ public class main extends AppCompatActivity {
         System.out.println(username);
         startActivity(intent);
     }
+    public void  lookup(View view){
+        Intent intent = new Intent(main.this,lookup.class);
+        String username = getIntent().getStringExtra("username");
+        intent.putExtra("username", username);
+        System.out.println(username);
+        startActivity(intent);
+    }
+    public void  record(View view){
+        Intent intent = new Intent(main.this,record.class);
+        String username = getIntent().getStringExtra("username");
+        intent.putExtra("username", username);
+        System.out.println(username);
+        startActivity(intent);
+    }
 }
