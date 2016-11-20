@@ -11,9 +11,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
-import com.example.a279095640.babycry.EnvironmentShare;
-
 import java.io.File;
 
 public class record extends AppCompatActivity {
@@ -78,9 +75,6 @@ public class record extends AppCompatActivity {
                         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
                         // 创建一个临时的音频输出文件.record_是文件的前缀名 .amr是后缀名
                         audioFile = File.createTempFile("record_", ".amr", EnvironmentShare.getAudioRecordDir());
-                        // audioFile =new
-                        // File(Environment.getExternalStorageDirectory().getCanonicalPath()+"/sound.amr");
-                        // 设置录制器的文件保留路径
                         mediaRecorder.setOutputFile(audioFile.getAbsolutePath());
 
                         // 准备并且开始启动录制器
@@ -129,7 +123,7 @@ public class record extends AppCompatActivity {
             // 更新标题栏 并用 Toast弹出信息提示用户
             if (!msg.equals("")) {
                 setTitle(msg);
-                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             setTitle(e.getMessage());
