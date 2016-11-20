@@ -1,9 +1,12 @@
 package com.example.a279095640.babycry;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,9 +14,21 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
 
 public class record extends AppCompatActivity {
+    private String uploadUrl = "http://192.168.1.113:8080/testupload.php";
     private String reasons;
     private EditText otherreason;
     private EditText babyid;
@@ -128,6 +143,63 @@ public class record extends AppCompatActivity {
         } catch (Exception e) {
             setTitle(e.getMessage());
         }
+
+    }
+    public void upload(View view){
+        final String path = audioFile.getAbsolutePath();
+        Log.i("Testlog", "-1");
+        new Thread(){
+            public void run(){
+                try {String end = "\r\n";
+                    String twoHyphens = "--";
+                    String boundary = "******";
+                    URL url = new URL(uploadUrl);
+                    Log.i("Testlog", "0");
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url
+                            .openConnection();
+                    httpURLConnection.setChunkedStreamingMode(128 * 1024);// 128K
+                    // 允许输入输出流
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setUseCaches(false);
+                    // 使用POST方法
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
+                    httpURLConnection.setRequestProperty("Charset", "UTF-8");
+                    httpURLConnection.setRequestProperty("Content-Type",
+                            "multipart/form-data;boundary=" + boundary);
+
+                    DataOutputStream dos = new DataOutputStream(
+                            httpURLConnection.getOutputStream());
+                    dos.writeBytes(twoHyphens + boundary + end);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"uploadfile\"; filename=\""
+                            + path.substring(path.lastIndexOf("/") + 1) + "\"" + end);
+                    dos.writeBytes(end);
+                    Log.i("Testlog", "1");
+                    FileInputStream fis = new FileInputStream(path);
+                    byte[] buffer = new byte[8192]; // 8k
+                    int count = 0;
+                    // 读取文件
+                    while ((count = fis.read(buffer)) != -1) {
+                        dos.write(buffer, 0, count);
+                    }
+                    fis.close();
+                    dos.writeBytes(end);
+                    dos.writeBytes(twoHyphens + boundary + twoHyphens + end);
+                    dos.flush();
+                    InputStream is = httpURLConnection.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is, "utf-8");
+                    BufferedReader br = new BufferedReader(isr);
+                    String result = br.readLine();
+                    Log.i("Testlog", result);
+                    dos.close();
+                    is.close();
+
+                }catch (IOException e) {
+                    // TODO Auto-generated catch block
+                }
+            }
+        }.start();
 
     }
 

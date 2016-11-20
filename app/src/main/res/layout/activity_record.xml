@@ -65,7 +65,7 @@
         android:id="@+id/uploadrecording"
         android:background="@color/colorPrimary"
         android:textSize="4mm"
-        android:onClick="regist"
+        android:onClick="upload"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/textView8"
         android:layout_alignEnd="@+id/textView8"
