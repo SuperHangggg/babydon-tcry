@@ -3,6 +3,7 @@ package com.example.a279095640.babycry;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class record extends AppCompatActivity {
@@ -32,6 +35,7 @@ public class record extends AppCompatActivity {
     private String reasons;
     private EditText otherreason;
     private EditText babyid;
+    private EditText weight;
     private MediaPlayer mediaPlayer;
     // 多媒体录制器
     private MediaRecorder mediaRecorder = new MediaRecorder();
@@ -47,12 +51,7 @@ public class record extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-        Button btnStart = (Button) findViewById(R.id.startrecording);
-        Button btnStop = (Button) findViewById(R.id.stoprecording);
-        Button btnPlay = (Button) findViewById(R.id.playrecording);
-        Button btnUpLoad = (Button) findViewById(R.id.uploadrecording);
-        Button btnDownLoad = (Button) findViewById(R.id.downloadrecording);
-
+        weight = (EditText)findViewById(R.id.weight_today);
         otherreason = (EditText)findViewById(R.id.inputreason);
         babyid = (EditText)findViewById(R.id.uploadbabyid);
         RadioGroup radiogroup = (RadioGroup) this.findViewById(R.id.radioReasons);
@@ -89,7 +88,7 @@ public class record extends AppCompatActivity {
                         // 设置音频编码方式（默认的编码方式）
                         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
                         // 创建一个临时的音频输出文件.record_是文件的前缀名 .amr是后缀名
-                        audioFile = File.createTempFile("record_", ".amr", EnvironmentShare.getAudioRecordDir());
+                        audioFile = File.createTempFile("record_", ".mp3", EnvironmentShare.getAudioRecordDir());
                         mediaRecorder.setOutputFile(audioFile.getAbsolutePath());
 
                         // 准备并且开始启动录制器
@@ -145,62 +144,158 @@ public class record extends AppCompatActivity {
         }
 
     }
+    protected static final int ERROR = 2;
+    protected static final int SUCCESS = 1;
+
+    private Handler handler = new Handler(){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SUCCESS:
+                    Toast.makeText(record.this,(String)msg.obj, Toast.LENGTH_SHORT).show();
+
+                    break;
+
+                case ERROR:
+                    Toast.makeText(record.this,"创建失败请重试", Toast.LENGTH_SHORT).show();
+                    break;
+
+            }
+        };
+    };
     public void upload(View view){
-        final String path = audioFile.getAbsolutePath();
-        Log.i("Testlog", "-1");
+        final String reason = reasons;
+        final String other = otherreason.getText().toString();
+        final String id = babyid.getText().toString();
+        final String wt = weight.getText().toString();
+        if(TextUtils.isEmpty(id)||(TextUtils.isEmpty(reason)&&TextUtils.isEmpty(other))){
+            Toast.makeText(this, "信息不完整！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(audioFile==null){
+            Toast.makeText(this, "还未录音！！", Toast.LENGTH_SHORT).show();
+            return;
+        }
         new Thread(){
             public void run(){
-                try {String end = "\r\n";
-                    String twoHyphens = "--";
-                    String boundary = "******";
-                    URL url = new URL(uploadUrl);
-                    Log.i("Testlog", "0");
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url
-                            .openConnection();
-                    httpURLConnection.setChunkedStreamingMode(128 * 1024);// 128K
-                    // 允许输入输出流
-                    httpURLConnection.setDoInput(true);
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setUseCaches(false);
-                    // 使用POST方法
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
-                    httpURLConnection.setRequestProperty("Charset", "UTF-8");
-                    httpURLConnection.setRequestProperty("Content-Type",
-                            "multipart/form-data;boundary=" + boundary);
-
-                    DataOutputStream dos = new DataOutputStream(
-                            httpURLConnection.getOutputStream());
-                    dos.writeBytes(twoHyphens + boundary + end);
-                    dos.writeBytes("Content-Disposition: form-data; name=\"uploadfile\"; filename=\""
-                            + path.substring(path.lastIndexOf("/") + 1) + "\"" + end);
-                    dos.writeBytes(end);
-                    Log.i("Testlog", "1");
-                    FileInputStream fis = new FileInputStream(path);
-                    byte[] buffer = new byte[8192]; // 8k
-                    int count = 0;
-                    // 读取文件
-                    while ((count = fis.read(buffer)) != -1) {
-                        dos.write(buffer, 0, count);
+                try {
+                    //http://localhost/xampp/android/login.php
+                    //区别1、url的路径不同
+                    String path = "http://192.168.1.113:8080/upload.php";
+                    URL url = new  URL(path);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    //区别2、请求方式post
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("User-Agent", "Mozilla/5.0(compatible;MSIE 9.0;Windows NT 6.1;Trident/5.0)");
+                    //区别3、必须指定两个请求的参数
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//请求的类型  表单数据
+                    String data;
+                    if(TextUtils.isEmpty(other)) {
+                        data = "&babyid=" + id +"&weight=" + wt + "&reason=" + URLEncoder.encode(reason,"UTF-8")+"&button=";
                     }
-                    fis.close();
-                    dos.writeBytes(end);
-                    dos.writeBytes(twoHyphens + boundary + twoHyphens + end);
-                    dos.flush();
-                    InputStream is = httpURLConnection.getInputStream();
-                    InputStreamReader isr = new InputStreamReader(is, "utf-8");
-                    BufferedReader br = new BufferedReader(isr);
-                    String result = br.readLine();
-                    Log.i("Testlog", result);
-                    dos.close();
-                    is.close();
+                    else {
+                        data = "&babyid=" + id + "&weight=" + wt + "&reason=" + URLEncoder.encode(other,"UTF-8")+"&button=";
+                    }
+                    conn.setRequestProperty("Content-Length", data.length()+"");//数据的长度
+                    //区别4、记得设置把数据写给服务器
+                    conn.setDoOutput(true);//设置向服务器写数据
+                    byte[] bytes = data.getBytes();
+                    conn.getOutputStream().write(bytes);//把数据以流的方式写给服务器
+                    int code = conn.getResponseCode();
+                    System.out.println(code);
+                    if(code == 200){
+                        InputStream is = conn.getInputStream();
+                        String  result = StreamTools.readStream(is);
+                        String suc = "上传中";
+                        System.out.println(result);
+                        String regEx="[^0-9]";
+                        Pattern p = Pattern.compile(regEx);
+                        Matcher m = p.matcher(result);
+                        String num = m.replaceAll("").trim();
+                        System.out.println(num);
+                        result = result.replaceAll(num,"");
+                        Message mas= Message.obtain();
+                        mas.what = SUCCESS;
+                        mas.obj = result;
+                        handler.sendMessage(mas);
+                        result= URLEncoder.encode(result,"UTF-8");
+                        result =result.substring(9,result.length()-2);
+                        suc   = URLEncoder.encode(suc,"UTF-8");
+                        if(suc.equals(result))
+                        {
+                            String newfile = id+"_"+num+".mp3";
+                            String filename;
+                            filename = audioFile.getAbsolutePath();
+                            System.out.println(filename);
+                            filename = filename.substring(0,filename.lastIndexOf("/")+1);
+                            System.out.println(filename);
+                            filename = filename+newfile;
+                            CopyFileUtil.copyFile(audioFile.getAbsolutePath(),filename,true);
+                            uploadrecording(filename);
+                            Message succses= Message.obtain();
+                            succses.what = SUCCESS;
+                            succses.obj = "上传成功！";
+                            handler.sendMessage(succses);
+                        }
 
+                    }else{
+                        Message mas = Message.obtain();
+                        mas.what = ERROR;
+                        handler.sendMessage(mas);
+                    }
                 }catch (IOException e) {
                     // TODO Auto-generated catch block
+                    Message mas = Message.obtain();
+                    mas.what = ERROR;
+                    handler.sendMessage(mas);
                 }
             }
         }.start();
 
+    }
+    private void uploadrecording(String filename) throws IOException {
+        final String path = filename;
+        String end = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "******";
+        URL url = new URL(uploadUrl);
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url
+                .openConnection();
+        httpURLConnection.setChunkedStreamingMode(128 * 1024);// 128K
+        // 允许输入输出流
+        httpURLConnection.setDoInput(true);
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setUseCaches(false);
+        // 使用POST方法
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
+        httpURLConnection.setRequestProperty("Charset", "UTF-8");
+        httpURLConnection.setRequestProperty("Content-Type",
+                "multipart/form-data;boundary=" + boundary);
+
+        DataOutputStream dos = new DataOutputStream(
+                httpURLConnection.getOutputStream());
+        dos.writeBytes(twoHyphens + boundary + end);
+        dos.writeBytes("Content-Disposition: form-data; name=\"uploadfile\"; filename=\""
+                + path.substring(path.lastIndexOf("/") + 1) + "\"" + end);
+        dos.writeBytes(end);
+
+        FileInputStream fis = new FileInputStream(path);
+        byte[] buffer = new byte[8192]; // 8k
+        int count = 0;
+        // 读取文件
+        while ((count = fis.read(buffer)) != -1) {
+            dos.write(buffer, 0, count);
+        }
+        fis.close();
+        dos.writeBytes(end);
+        dos.writeBytes(twoHyphens + boundary + twoHyphens + end);
+        dos.flush();
+        InputStream is = httpURLConnection.getInputStream();
+        InputStreamReader isr = new InputStreamReader(is, "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String result = br.readLine();
+        dos.close();
+        is.close();
     }
 
     @Override
@@ -219,6 +314,8 @@ public class record extends AppCompatActivity {
             mediaRecorder=null;
         }
     }
-
+    public void  Goback(View view){
+        finish();
+    }
 
 }

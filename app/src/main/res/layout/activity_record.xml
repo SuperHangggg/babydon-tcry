@@ -46,20 +46,20 @@
         android:layout_alignParentEnd="true" />
 
     <Button
-        android:text="下载录音"
+        android:text="返回"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/downloadrecording"
         android:background="@color/colorPrimary"
         android:textSize="4mm"
-        android:onClick="regist"
+        android:onClick="Goback"
         android:layout_alignBaseline="@+id/uploadrecording"
         android:layout_alignBottom="@+id/uploadrecording"
         android:layout_toRightOf="@+id/stoprecording"
         android:layout_toEndOf="@+id/stoprecording" />
 
     <Button
-        android:text="上传录音"
+        android:text="上传"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/uploadrecording"
@@ -159,5 +159,19 @@
         android:layout_above="@+id/inputreason"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="当日体重（未称重可不输入）"
+        android:inputType="numberDecimal"
+        android:textSize="45px"
+        android:ems="10"
+        android:id="@+id/weight_today"
+        android:layout_below="@+id/inputreason"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
