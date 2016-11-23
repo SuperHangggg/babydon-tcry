@@ -50,7 +50,7 @@ public class lookup extends AppCompatActivity {
                 try {
                     //http://localhost/xampp/android/login.php
                     //区别1、url的路径不同
-                    String path = "http://192.168.1.113:8080/lookup.php";
+                    String path = "http://59.78.15.207:8080/lookup.php";
                     URL url = new  URL(path);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     //区别2、请求方式post

@@ -24,7 +24,6 @@
         <activity android:name=".newbabyfile" />
         <activity android:name=".forget" />
         <activity android:name=".lookup" />
-        <activity android:name=".upload" />
         <activity android:name=".record"></activity>
     </application>
 
