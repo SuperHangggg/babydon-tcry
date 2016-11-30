@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -31,8 +33,10 @@ import java.util.regex.Pattern;
 
 
 public class record extends AppCompatActivity {
-    private String uploadUrl = "http://59.78.15.207:8080/testupload.php";
+    private String uploadUrl = "http://59.78.15.207:8080/";
+    private String usr;
     private String reasons;
+    private String date;
     private EditText otherreason;
     private EditText babyid;
     private EditText weight;
@@ -51,10 +55,27 @@ public class record extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
+        Intent intent = getIntent();
+        usr = intent.getStringExtra("username");
         weight = (EditText)findViewById(R.id.weight_today);
         otherreason = (EditText)findViewById(R.id.inputreason);
         babyid = (EditText)findViewById(R.id.uploadbabyid);
         RadioGroup radiogroup = (RadioGroup) this.findViewById(R.id.radioReasons);
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+
+                String [] date_string = getResources().getStringArray(R.array.date);
+                date = date_string[pos];
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
 
 
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -145,7 +166,10 @@ public class record extends AppCompatActivity {
 
     }
     protected static final int ERROR = 2;
+    protected static final int ERROR1 = 3;
+    protected static final int ERROR2 = 4;
     protected static final int SUCCESS = 1;
+    protected static final int SUCCESS1 = 5;
 
     private Handler handler = new Handler(){
         public void handleMessage(Message msg) {
@@ -154,14 +178,70 @@ public class record extends AppCompatActivity {
                     Toast.makeText(record.this,(String)msg.obj, Toast.LENGTH_SHORT).show();
 
                     break;
+                case SUCCESS1:
+                    Toast.makeText(record.this,(String)msg.obj, Toast.LENGTH_LONG).show();
 
+                    break;
                 case ERROR:
                     Toast.makeText(record.this,"创建失败请重试", Toast.LENGTH_SHORT).show();
                     break;
 
+                case ERROR1:
+                    Toast.makeText(record.this,"查询失败请重试", Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR2:
+                    Toast.makeText(record.this,"未知错误", Toast.LENGTH_SHORT).show();
+                    break;
             }
         };
     };
+
+
+    public void search(View view){
+        final String acc = usr;
+        final String dt = date;
+        new Thread(){
+            public void run(){
+                try {
+                    //区别1、url的路径不同
+                    String path =uploadUrl+"search.php";
+                    URL url = new  URL(path);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    //区别2、请求方式post
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("User-Agent", "Mozilla/5.0(compatible;MSIE 9.0;Windows NT 6.1;Trident/5.0)");
+                    //区别3、必须指定两个请求的参数
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//请求的类型  表单数据
+                    String data = "&username="+acc+ "&date=" + URLEncoder.encode(dt,"UTF-8")+"&button=";
+                    System.out.println(dt);
+                    ;
+                    conn.setRequestProperty("Content-Length", data.length()+"");//数据的长度
+                    //区别4、记得设置把数据写给服务器
+                    conn.setDoOutput(true);//设置向服务器写数据
+                    byte[] bytes = data.getBytes();
+                    conn.getOutputStream().write(bytes);//把数据以流的方式写给服务器
+                    int code = conn.getResponseCode();
+                    if(code == 200){
+                        InputStream is = conn.getInputStream();
+                        String  result = StreamTools.readStream(is);
+                        Message mas= Message.obtain();
+                        mas.what = SUCCESS;
+                        mas.obj = result;
+                        handler.sendMessage(mas);
+                    }else{
+                        Message mas = Message.obtain();
+                        mas.what = ERROR1;
+                        handler.sendMessage(mas);
+                    }
+                }catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    Message mas = Message.obtain();
+                    mas.what = ERROR1;
+                    handler.sendMessage(mas);
+                }
+            }
+        }.start();
+    }
     public void upload(View view){
         final String reason = reasons;
         final String other = otherreason.getText().toString();
@@ -180,7 +260,7 @@ public class record extends AppCompatActivity {
                 try {
                     //http://localhost/xampp/android/login.php
                     //区别1、url的路径不同
-                    String path = "http://59.78.15.207:8080/upload.php";
+                    String path = uploadUrl+"upload.php";
                     URL url = new  URL(path);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     //区别2、请求方式post
@@ -235,6 +315,7 @@ public class record extends AppCompatActivity {
                             succses.what = SUCCESS;
                             succses.obj = "上传成功！";
                             handler.sendMessage(succses);
+                            existed_recording();
                         }
 
                     }else{
@@ -257,7 +338,7 @@ public class record extends AppCompatActivity {
         String end = "\r\n";
         String twoHyphens = "--";
         String boundary = "******";
-        URL url = new URL(uploadUrl);
+        URL url = new URL(uploadUrl+"testupload.php");
         HttpURLConnection httpURLConnection = (HttpURLConnection) url
                 .openConnection();
         httpURLConnection.setChunkedStreamingMode(128 * 1024);// 128K
@@ -296,6 +377,49 @@ public class record extends AppCompatActivity {
         String result = br.readLine();
         dos.close();
         is.close();
+    }
+
+    private void existed_recording() {
+        final String id = babyid.getText().toString();
+        new Thread(){
+            public void run(){
+                try {
+                    //区别1、url的路径不同
+                    String path =uploadUrl+"existed_recording.php";
+                    URL url = new  URL(path);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    //区别2、请求方式post
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("User-Agent", "Mozilla/5.0(compatible;MSIE 9.0;Windows NT 6.1;Trident/5.0)");
+                    //区别3、必须指定两个请求的参数
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//请求的类型  表单数据
+                    String data = "&babyid="+id+"&button=";;
+                    conn.setRequestProperty("Content-Length", data.length()+"");//数据的长度
+                    //区别4、记得设置把数据写给服务器
+                    conn.setDoOutput(true);//设置向服务器写数据
+                    byte[] bytes = data.getBytes();
+                    conn.getOutputStream().write(bytes);//把数据以流的方式写给服务器
+                    int code = conn.getResponseCode();
+                    if(code == 200){
+                        InputStream is = conn.getInputStream();
+                        String  result = StreamTools.readStream(is);
+                        Message mas= Message.obtain();
+                        mas.what = SUCCESS1;
+                        mas.obj = result;
+                        handler.sendMessage(mas);
+                    }else{
+                        Message mas = Message.obtain();
+                        mas.what = ERROR2;
+                        handler.sendMessage(mas);
+                    }
+                }catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    Message mas = Message.obtain();
+                    mas.what = ERROR2;
+                    handler.sendMessage(mas);
+                }
+            }
+        }.start();
     }
 
     @Override

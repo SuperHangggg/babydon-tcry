@@ -1,9 +1,7 @@
 <resources>
-    <string name="app_name">我的应用</string>
+    <string name="app_name">小孩别哭</string>
     <string name="title_activity_main">首页</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="url">http://59.78.15.207:8080</string>
 
     <string name="action_settings">Settings</string>
 </resources>

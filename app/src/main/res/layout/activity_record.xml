@@ -133,21 +133,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="请输入要上传录音的婴儿id"
-        android:textSize="45px"
-        android:ems="10"
-        android:id="@+id/uploadbabyid"
-        android:layout_above="@+id/textView8"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="30dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
     <TextView
         android:text="哭泣原因"
         android:textSize="60px"
@@ -173,5 +158,47 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="请输入要上传录音的婴儿id"
+        android:textSize="45px"
+        android:ems="10"
+        android:id="@+id/uploadbabyid"
+        android:layout_above="@+id/textView8"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_marginRight="21dp"
+        android:entries="@array/date"
+
+        android:layout_marginEnd="21dp"
+        android:layout_alignBottom="@+id/button3"
+        android:layout_alignRight="@+id/downloadrecording"
+        android:layout_alignEnd="@+id/downloadrecording"
+        android:layout_alignTop="@+id/button3" />
+
+    <Button
+        android:text="查询id"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/button3"
+        android:onClick="search"
+        android:layout_below="@+id/startrecording"
+        android:layout_alignLeft="@+id/uploadrecording"
+        android:layout_alignStart="@+id/uploadrecording"
+        android:layout_marginLeft="31dp"
+        android:layout_marginStart="31dp" />
 
 </RelativeLayout>
