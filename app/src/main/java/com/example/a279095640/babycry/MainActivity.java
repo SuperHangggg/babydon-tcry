@@ -19,6 +19,7 @@ import java.net.URLEncoder;
 public class MainActivity extends AppCompatActivity {
     protected static final int ERROR = 2;
     protected static final int SUCCESS = 1;
+    private String uploadUrl = "http://202.120.62.152:8080/";
     private EditText account;
     private EditText password;
 
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     //http://localhost/xampp/android/login.php
                     //区别1、url的路径不同
-                    String path = "http://59.78.15.207:8080/login.php";
+                    String path = uploadUrl+"login.php";
                     URL url = new  URL(path);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     //区别2、请求方式post

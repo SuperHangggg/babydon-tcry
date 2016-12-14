@@ -19,6 +19,7 @@ import java.net.URLEncoder;
 public class forget extends AppCompatActivity {
     protected static final int ERROR = 2;
     protected static final int SUCCESS = 1;
+    private String uploadUrl = "http://202.120.62.152:8080/";
     private EditText usr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class forget extends AppCompatActivity {
                 try {
                     //http://localhost/xampp/android/login.php
                     //区别1、url的路径不同
-                    String path = "http://192.168.1.113:8080/forget.php";
+                    String path = uploadUrl+"forget.php";
                     URL url = new  URL(path);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     //区别2、请求方式post

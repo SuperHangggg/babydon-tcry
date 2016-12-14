@@ -22,6 +22,7 @@ public class register extends AppCompatActivity {
     private EditText register_username;
     private EditText register_password;
     private EditText confirm_password;
+    private String uploadUrl = "http://202.120.62.152:8080/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class register extends AppCompatActivity {
                 try {
                     //http://localhost/xampp/android/login.php
                     //区别1、url的路径不同
-                    String path = "http://59.78.15.207:8080/register.php";
+                    String path = uploadUrl+"register.php";
                     URL url = new  URL(path);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     //区别2、请求方式post
