@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 
 
 public class record extends AppCompatActivity {
-    private String uploadUrl = "http://59.78.15.207:8080/";
+    private String uploadUrl = "http://202.120.62.152:8080/";
     private String usr;
     private String reasons;
     private String date;
@@ -187,7 +187,7 @@ public class record extends AppCompatActivity {
                     break;
 
                 case ERROR1:
-                    Toast.makeText(record.this,"查询失败请重试", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(record.this,"上传失败请重试", Toast.LENGTH_SHORT).show();
                     break;
                 case ERROR2:
                     Toast.makeText(record.this,"未知错误", Toast.LENGTH_SHORT).show();

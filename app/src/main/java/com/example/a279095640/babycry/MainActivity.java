@@ -1,6 +1,7 @@
 package com.example.a279095640.babycry;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import java.net.URL;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import java.net.URLEncoder;
@@ -43,16 +45,45 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         account = (EditText) findViewById(R.id.account);
         password = (EditText) findViewById(R.id.password);
+        readAccount();
 
+    }
+    public void readAccount() {
 
+        //创建SharedPreferences对象
+        SharedPreferences sp = getSharedPreferences("info", MODE_PRIVATE);
+
+        //获得保存在SharedPredPreferences中的用户名和密码
+        String username = sp.getString("username", "");
+        String pass = sp.getString("password", "");
+
+        //在用户名和密码的输入框中显示用户名和密码
+        account.setText(username);
+        password.setText(pass);
     }
     public void login(View view){
         final String acc = account.getText().toString();
         final String psd = password.getText().toString();
+        CheckBox cb = (CheckBox)findViewById(R.id.checkBox);
 
         if(TextUtils.isEmpty(acc)||TextUtils.isEmpty(psd)){
             Toast.makeText(this, "用户和密码不能为空", Toast.LENGTH_SHORT).show();
             return;
+        }
+        if(cb.isChecked()) {
+
+            //创建sharedPreference对象，info表示文件名，MODE_PRIVATE表示访问权限为私有的
+            SharedPreferences sp = getSharedPreferences("info", MODE_PRIVATE);
+
+            //获得sp的编辑器
+            SharedPreferences.Editor ed = sp.edit();
+
+            //以键值对的显示将用户名和密码保存到sp中
+            ed.putString("username", acc);
+            ed.putString("password", psd);
+
+            //提交用户名和密码
+            ed.commit();
         }
         new Thread(){
             public void run(){

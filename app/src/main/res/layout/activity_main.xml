@@ -23,19 +23,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <TextView
-        android:text="忘记密码"
-        android:layout_width="wrap_content"
-        android:textSize="60px"
-        android:clickable="true"
-        android:onClick="findpass"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="#000000"
-        android:id="@+id/forget" />
-
     <EditText
         android:id="@+id/account"
         android:layout_width="wrap_content"
@@ -58,6 +45,48 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
+        android:text="忘记密码"
+        android:layout_width="wrap_content"
+        android:textSize="60px"
+        android:clickable="true"
+        android:onClick="findpass"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:id="@+id/forget"
+        android:layout_alignBaseline="@+id/text_register"
+        android:layout_alignBottom="@+id/text_register"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="登陆"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/login"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="login"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/text_register"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <CheckBox
+        android:text="记住用户名和密码"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox"
+        android:textSize="60px"
+        android:checked="true"
+        android:layout_below="@+id/password"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
         android:text="注册"
         android:textSize="60px"
         android:layout_width="wrap_content"
@@ -66,23 +95,10 @@
         android:clickable="true"
         android:onClick="click_register"
         android:id="@+id/text_register"
-        android:layout_below="@+id/password"
+        android:layout_below="@+id/checkBox"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:text="登陆"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/login"
-        android:layout_below="@+id/text_register"
-        android:layout_alignParentRight="true"
-        android:background="@color/colorPrimary"
-        android:textSize="4mm"
-        android:onClick="login"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
 
 
 </RelativeLayout>
