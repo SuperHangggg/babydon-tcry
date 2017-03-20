@@ -1,5 +1,8 @@
 package com.example.a279095640.babycry;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -61,7 +64,6 @@ public class record extends AppCompatActivity {
         otherreason = (EditText)findViewById(R.id.inputreason);
         babyid = (EditText)findViewById(R.id.uploadbabyid);
         RadioGroup radiogroup = (RadioGroup) this.findViewById(R.id.radioReasons);
-
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -403,10 +405,7 @@ public class record extends AppCompatActivity {
                     if(code == 200){
                         InputStream is = conn.getInputStream();
                         String  result = StreamTools.readStream(is);
-                        Message mas= Message.obtain();
-                        mas.what = SUCCESS1;
-                        mas.obj = result;
-                        handler.sendMessage(mas);
+                        showDialog(result);
                     }else{
                         Message mas = Message.obtain();
                         mas.what = ERROR2;
@@ -420,6 +419,19 @@ public class record extends AppCompatActivity {
                 }
             }
         }.start();
+    }
+    private void showDialog(String message) {
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("确认对话框");//设置标题
+        builder.setMessage(message);//设置内容
+/*添加对话框中确定按钮和点击事件*/
+        builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+            }
+        });
+        AlertDialog dialog=builder.create();//获取dialog
+        dialog.show();//显示对话框
     }
 
     @Override

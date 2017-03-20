@@ -58,9 +58,10 @@ public class newbabyfile extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 TextView show = (TextView) findViewById(R.id.birthdate);
-                                show.setText(year + "年" + monthOfYear
+                                int Actualmonth = monthOfYear+1;
+                                show.setText(year + "年" + Actualmonth
                                         + "月" + dayOfMonth + "日");
-                                birthday = Integer.toString(year) + '-' + Integer.toString(monthOfYear) + '-' + Integer.toString(dayOfMonth);
+                                birthday = Integer.toString(year) + '-' + Integer.toString(Actualmonth) + '-' + Integer.toString(dayOfMonth);
 
                             }
                         }
