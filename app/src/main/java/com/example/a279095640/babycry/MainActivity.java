@@ -46,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
         account = (EditText) findViewById(R.id.account);
         password = (EditText) findViewById(R.id.password);
         readAccount();
+        if(!account.getText().toString().isEmpty()&&!password.getText().toString().isEmpty())
+        {
+            Message mas= Message.obtain();
+            mas.what = SUCCESS;
+            String suc = account.getText().toString()+"已经成功登录";
+            mas.obj = suc;
+            handler.sendMessage(mas);
+            Intent intent = new Intent(MainActivity.this, main.class);
+            intent.putExtra("username", account.getText().toString());
+            startActivity(intent);}
 
     }
     public void readAccount() {

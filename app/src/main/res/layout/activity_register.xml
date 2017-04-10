@@ -86,7 +86,7 @@
         android:layout_alignParentEnd="true" />
 
     <TextView
-        android:text="医院名称"
+        android:text="机构名称"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text1"
@@ -97,7 +97,7 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="医院所在地"
+        android:text="机构所在地"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text2"

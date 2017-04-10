@@ -77,7 +77,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint = "请输入婴儿昵称"
+        android:hint = "婴儿昵称(便于记忆)"
         android:textSize="50px"
         android:id="@+id/name"
         android:layout_alignBaseline="@+id/textView3"
@@ -127,7 +127,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint = "请输入婴儿id"
+        android:hint = "请输入婴儿编号"
         android:inputType="number"
         android:textSize="50px"
         android:id="@+id/id"
@@ -150,7 +150,7 @@
         android:id="@+id/textView6" />
 
     <TextView
-        android:text="婴儿ID："
+        android:text="婴儿编号："
         android:textSize="50px"
         android:layout_width="wrap_content"
         android:textColor="#000000"
@@ -174,7 +174,7 @@
         android:layout_marginTop="24dp" />
 
     <TextView
-        android:text="母体孕周数："
+        android:text="怀孕周数："
         android:textSize="50px"
         android:textColor="#000000"
         android:layout_width="wrap_content"
@@ -190,7 +190,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:hint = "请输入孕周数"
+        android:hint = "请输入怀孕周数"
         android:textSize="50px"
         android:id="@+id/preweek"
         android:layout_alignBaseline="@+id/textView7"

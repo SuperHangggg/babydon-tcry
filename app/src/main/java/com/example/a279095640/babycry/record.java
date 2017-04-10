@@ -2,6 +2,7 @@ package com.example.a279095640.babycry;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -19,7 +20,12 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -31,6 +37,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,10 +46,12 @@ import java.util.regex.Pattern;
 public class record extends AppCompatActivity {
     private String uploadUrl = "http://202.120.62.152:8080/";
     private String usr;
+    private String time;
+    private TextView babyname;
     private String reasons;
     private String date;
     private EditText otherreason;
-    private EditText babyid;
+    private TextView babyid;
     private EditText weight;
     private MediaPlayer mediaPlayer;
     // 多媒体录制器
@@ -62,7 +72,9 @@ public class record extends AppCompatActivity {
         usr = intent.getStringExtra("username");
         weight = (EditText)findViewById(R.id.weight_today);
         otherreason = (EditText)findViewById(R.id.inputreason);
-        babyid = (EditText)findViewById(R.id.uploadbabyid);
+        otherreason.setFocusableInTouchMode(false);
+        babyname = (TextView)findViewById(R.id.babyname) ;
+        babyid = (TextView)findViewById(R.id.uploadbabyid);
         RadioGroup radiogroup = (RadioGroup) this.findViewById(R.id.radioReasons);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -90,6 +102,14 @@ public class record extends AppCompatActivity {
                 RadioButton rb = (RadioButton) record.this.findViewById(radioButtonId);
                 //更新文本内容，以符合选中项
                 reasons = rb.getText().toString();
+                switch (arg1) {
+                    case R.id.radioOther:
+                        otherreason.setFocusableInTouchMode(true);
+                        break;
+                    default:
+                        otherreason.setFocusableInTouchMode(false);
+                        break;
+                }
             }
         });
 
@@ -172,6 +192,8 @@ public class record extends AppCompatActivity {
     protected static final int ERROR2 = 4;
     protected static final int SUCCESS = 1;
     protected static final int SUCCESS1 = 5;
+    protected static final int UPLOAD = 6;
+    protected static final int SEARCH = 7;
 
     private Handler handler = new Handler(){
         public void handleMessage(Message msg) {
@@ -193,6 +215,15 @@ public class record extends AppCompatActivity {
                     break;
                 case ERROR2:
                     Toast.makeText(record.this,"未知错误", Toast.LENGTH_SHORT).show();
+                    break;
+                case UPLOAD:
+                    showDialog(record.this,(String)msg.obj,"上传成功");
+                    break;
+                case SEARCH:
+                    Intent intent = new Intent();
+                    intent.setClass(record.this,ListActivity.class);
+                    intent.putExtra("result", (String)msg.obj);
+                    startActivityForResult(intent,3);
                     break;
             }
         };
@@ -226,10 +257,11 @@ public class record extends AppCompatActivity {
                     if(code == 200){
                         InputStream is = conn.getInputStream();
                         String  result = StreamTools.readStream(is);
-                        Message mas= Message.obtain();
-                        mas.what = SUCCESS;
+                        Message mas = Message.obtain();
+                        mas.what = SEARCH;
                         mas.obj = result;
                         handler.sendMessage(mas);
+
                     }else{
                         Message mas = Message.obtain();
                         mas.what = ERROR1;
@@ -244,12 +276,28 @@ public class record extends AppCompatActivity {
             }
         }.start();
     }
-    public void upload(View view){
+    public void upload_click(View view){
+        final String reason = reasons;
+        final String other = otherreason.getText().toString();
+        final String id = babyid.getText().toString();
+        if(id.equals("未选择")||(TextUtils.isEmpty(reason)&&TextUtils.isEmpty(other))){
+            Toast.makeText(this, "信息不完整！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(audioFile==null){
+            Toast.makeText(this, "还未录音！！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String message="昵称："+babyname.getText().toString()+"\n"+"编号："+babyid.getText().toString()+"\n"+"创建时间："+time;
+        System.out.println(message);
+        showConfirmDialog(record.this,message,"确定上传吗？");
+    }
+    public void upload(){
         final String reason = reasons;
         final String other = otherreason.getText().toString();
         final String id = babyid.getText().toString();
         final String wt = weight.getText().toString();
-        if(TextUtils.isEmpty(id)||(TextUtils.isEmpty(reason)&&TextUtils.isEmpty(other))){
+        if(id.equals("未选择")||(TextUtils.isEmpty(reason)&&TextUtils.isEmpty(other))){
             Toast.makeText(this, "信息不完整！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -313,10 +361,6 @@ public class record extends AppCompatActivity {
                             filename = filename+newfile;
                             CopyFileUtil.copyFile(audioFile.getAbsolutePath(),filename,true);
                             uploadrecording(filename);
-                            Message succses= Message.obtain();
-                            succses.what = SUCCESS;
-                            succses.obj = "上传成功！";
-                            handler.sendMessage(succses);
                             existed_recording();
                         }
 
@@ -405,7 +449,10 @@ public class record extends AppCompatActivity {
                     if(code == 200){
                         InputStream is = conn.getInputStream();
                         String  result = StreamTools.readStream(is);
-                        showDialog(result);
+                        Message mas= Message.obtain();
+                        mas.what = UPLOAD;
+                        mas.obj = result;
+                        handler.sendMessage(mas);
                     }else{
                         Message mas = Message.obtain();
                         mas.what = ERROR2;
@@ -420,18 +467,38 @@ public class record extends AppCompatActivity {
             }
         }.start();
     }
-    private void showDialog(String message) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setTitle("确认对话框");//设置标题
-        builder.setMessage(message);//设置内容
-/*添加对话框中确定按钮和点击事件*/
-        builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
+    private void showDialog(Context context,String message,String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+    }
+    private void showConfirmDialog(Context context,String message,String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {// 积极
+
             @Override
-            public void onClick(DialogInterface arg0, int arg1) {
+            public void onClick(DialogInterface dialog,
+                                int which) {
+                upload();
             }
         });
-        AlertDialog dialog=builder.create();//获取dialog
-        dialog.show();//显示对话框
+        builder.setPositiveButton("取消",null);
+        builder.show();
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch (resultCode) {
+            case 12:
+            babyid.setText(String.valueOf(data.getStringExtra("babyid")));
+            babyname.setText(String.valueOf(data.getStringExtra("babyname")));
+            time = String.valueOf(data.getStringExtra("creat_time"));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
