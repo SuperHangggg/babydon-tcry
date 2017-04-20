@@ -48,14 +48,7 @@ public class MainActivity extends AppCompatActivity {
         readAccount();
         if(!account.getText().toString().isEmpty()&&!password.getText().toString().isEmpty())
         {
-            Message mas= Message.obtain();
-            mas.what = SUCCESS;
-            String suc = account.getText().toString()+"已经成功登录";
-            mas.obj = suc;
-            handler.sendMessage(mas);
-            Intent intent = new Intent(MainActivity.this, main.class);
-            intent.putExtra("username", account.getText().toString());
-            startActivity(intent);}
+            auto_login();}
 
     }
     public void readAccount() {
@@ -70,6 +63,63 @@ public class MainActivity extends AppCompatActivity {
         //在用户名和密码的输入框中显示用户名和密码
         account.setText(username);
         password.setText(pass);
+    }
+    public void auto_login(){
+        final String acc = account.getText().toString();
+        final String psd = password.getText().toString();
+        new Thread(){
+            public void run(){
+                try {
+                    //http://localhost/xampp/android/login.php
+                    //区别1、url的路径不同
+                    String path = uploadUrl+"login.php";
+                    URL url = new  URL(path);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    //区别2、请求方式post
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("User-Agent", "Mozilla/5.0(compatible;MSIE 9.0;Windows NT 6.1;Trident/5.0)");
+                    //区别3、必须指定两个请求的参数
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//请求的类型  表单数据
+                    String data = "&username="+acc+"&password="+psd+"&button=";
+                    ;
+                    conn.setRequestProperty("Content-Length", data.length()+"");//数据的长度
+                    //区别4、记得设置把数据写给服务器
+                    conn.setDoOutput(true);//设置向服务器写数据
+                    byte[] bytes = data.getBytes();
+                    conn.getOutputStream().write(bytes);//把数据以流的方式写给服务器
+                    int code = conn.getResponseCode();
+                    if(code == 200){
+                        InputStream is = conn.getInputStream();
+                        String  result = StreamTools.readStream(is);
+                        Message mas= Message.obtain();
+                        mas.what = SUCCESS;
+                        mas.obj = result;
+                        handler.sendMessage(mas);
+                        String suc = acc+"已经成功登录";
+                        result= URLEncoder.encode(result,"UTF-8");
+                        result =result.substring(9,result.length()-2);
+                        suc   = URLEncoder.encode(suc,"UTF-8");
+                        if(suc.equals(result))
+                        {
+                            Intent intent = new Intent(MainActivity.this, record.class);
+                            intent.putExtra("username", acc);
+                            startActivity(intent);
+                        }
+
+                    }else{
+                        Message mas = Message.obtain();
+                        mas.what = ERROR;
+                        handler.sendMessage(mas);
+                    }
+                }catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    Message mas = Message.obtain();
+                    mas.what = ERROR;
+                    handler.sendMessage(mas);
+                }
+            }
+        }.start();
+
     }
     public void login(View view){
         final String acc = account.getText().toString();
@@ -129,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                         suc   = URLEncoder.encode(suc,"UTF-8");
                         if(suc.equals(result))
                         {
-                            Intent intent = new Intent(MainActivity.this, main.class);
+                            Intent intent = new Intent(MainActivity.this, record.class);
                             intent.putExtra("username", acc);
                             startActivity(intent);
                         }

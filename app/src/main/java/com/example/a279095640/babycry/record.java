@@ -58,6 +58,7 @@ public class record extends AppCompatActivity {
     private MediaRecorder mediaRecorder = new MediaRecorder();
     // 音频文件
     private File audioFile;
+    private boolean flag;
 
     // 传给Socket服务器端的上传和下载标志
     private final int UP_LOAD = 1;
@@ -68,6 +69,7 @@ public class record extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
+        flag = true;
         Intent intent = getIntent();
         usr = intent.getStringExtra("username");
         weight = (EditText)findViewById(R.id.weight_today);
@@ -118,6 +120,7 @@ public class record extends AppCompatActivity {
     public void onClick(View view) {
         try {
             String msg = "";
+            flag = true;
             switch (view.getId()) {
                 // 开始录音
                 case R.id.startrecording:
@@ -218,6 +221,7 @@ public class record extends AppCompatActivity {
                     break;
                 case UPLOAD:
                     showDialog(record.this,(String)msg.obj,"上传成功");
+                    flag = false;
                     break;
                 case SEARCH:
                     Intent intent = new Intent();
@@ -229,7 +233,24 @@ public class record extends AppCompatActivity {
         };
     };
 
-
+    public void  newfile(View view){
+        Intent intent = new Intent(record.this,newbabyfile.class);
+        String username = getIntent().getStringExtra("username");
+        intent.putExtra("username", username);
+        System.out.println(username);
+        startActivity(intent);
+    }
+    public void  data(View view){
+        Intent intent = new Intent(record.this,data.class);
+        String username = getIntent().getStringExtra("username");
+        intent.putExtra("username", username);
+        System.out.println(username);
+        startActivity(intent);
+    }
+    public void  readme(View view){
+        Intent intent = new Intent(record.this,readme.class);
+        startActivity(intent);
+    }
     public void search(View view){
         final String acc = usr;
         final String dt = date;
@@ -288,6 +309,11 @@ public class record extends AppCompatActivity {
             Toast.makeText(this, "还未录音！！", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(!flag){
+            Toast.makeText(this, "请勿重复上传！！！", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
         String message="昵称："+babyname.getText().toString()+"\n"+"编号："+babyid.getText().toString()+"\n"+"创建时间："+time;
         System.out.println(message);
         showConfirmDialog(record.this,message,"确定上传吗？");
@@ -343,10 +369,6 @@ public class record extends AppCompatActivity {
                         String num = m.replaceAll("").trim();
                         System.out.println(num);
                         result = result.replaceAll(num,"");
-                        Message mas= Message.obtain();
-                        mas.what = SUCCESS;
-                        mas.obj = result;
-                        handler.sendMessage(mas);
                         result= URLEncoder.encode(result,"UTF-8");
                         result =result.substring(9,result.length()-2);
                         suc   = URLEncoder.encode(suc,"UTF-8");
@@ -516,9 +538,6 @@ public class record extends AppCompatActivity {
             mediaRecorder.release();
             mediaRecorder=null;
         }
-    }
-    public void  Goback(View view){
-        finish();
     }
 
 }

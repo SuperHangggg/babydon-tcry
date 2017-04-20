@@ -10,120 +10,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.a279095640.babycry.record">
 
-    <Button
-        android:text="开始录音"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/startrecording"
-        android:background="@color/colorPrimary"
-        android:textSize="4mm"
-        android:onClick="onClick"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:text="停止录音"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/stoprecording"
-        android:background="@color/colorPrimary"
-        android:textSize="4mm"
-        android:onClick="onClick"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="播放录音"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/playrecording"
-        android:background="@color/colorPrimary"
-        android:textSize="4mm"
-        android:onClick="onClick"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:text="返回"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/downloadrecording"
-        android:background="@color/colorPrimary"
-        android:textSize="4mm"
-        android:onClick="Goback"
-        android:layout_alignBaseline="@+id/uploadrecording"
-        android:layout_alignBottom="@+id/uploadrecording"
-        android:layout_toRightOf="@+id/stoprecording"
-        android:layout_toEndOf="@+id/stoprecording" />
 
     <TextView
-        android:text="哭泣原因"
-        android:textSize="60px"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView8"
-        android:layout_marginBottom="34dp"
-        android:layout_above="@+id/inputreason"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Spinner
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_marginRight="21dp"
-        android:entries="@array/date"
-
-        android:layout_marginEnd="21dp"
-        android:layout_alignBottom="@+id/button3"
-        android:layout_alignRight="@+id/downloadrecording"
-        android:layout_alignEnd="@+id/downloadrecording"
-        android:layout_alignTop="@+id/button3" />
-
-    <Button
-        android:text="选择婴儿"
-        android:background="@color/colorPrimary"
-        android:textSize="4mm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:id="@+id/button3"
-        android:onClick="search"
-        android:layout_below="@+id/startrecording"
-        android:layout_alignLeft="@+id/uploadrecording"
-        android:layout_alignStart="@+id/uploadrecording"
-        android:layout_marginLeft="31dp"
-        android:layout_marginStart="31dp" />
-
-    <Button
-        android:text="上传"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/uploadrecording"
-        android:background="@color/colorPrimary"
-        android:textSize="4mm"
-        android:onClick="upload_click"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/textView8"
-        android:layout_alignEnd="@+id/textView8" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="当日体重（未称重可不输入）"
-        android:inputType="numberDecimal"
+        android:text="未选择"
         android:textSize="45px"
-        android:ems="10"
-        android:id="@+id/weight_today"
-        android:layout_above="@+id/downloadrecording"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="13dp"
+        android:gravity="center_vertical|right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/babyname"
+        android:layout_alignTop="@+id/textView10"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/textView8"
+        android:layout_toEndOf="@+id/textView8" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -134,24 +33,36 @@
         android:textSize="45px"
         android:ems="10"
         android:id="@+id/inputreason"
-        android:layout_above="@+id/weight_today"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="11dp"
+        android:layout_marginBottom="55dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="当日体重（未称重可不输入）"
+        android:inputType="numberDecimal"
+        android:textSize="45px"
+        android:ems="10"
+        android:id="@+id/weight_today"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/textView8"
+        android:layout_alignStart="@+id/textView8" />
 
     <RadioGroup android:id="@+id/radioReasons"
         android:contentDescription="原因"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/inputreason"
-        android:layout_marginBottom="42dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/inputreason"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="15dp">
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -192,32 +103,16 @@
     </RadioGroup>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="未选择"
-        android:textSize="45px"
-        android:gravity="center_vertical|right"
-        android:ems="10"
-        android:id="@+id/uploadbabyid"
-        android:layout_above="@+id/textView8"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/textView8"
-        android:layout_toEndOf="@+id/textView8" />
-
-    <TextView
-        android:text="婴儿编号："
-        android:textSize="45px"
+        android:text="哭泣原因"
+        android:textSize="60px"
         android:textColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/uploadbabyid"
+        android:id="@+id/textView8"
+        android:layout_marginBottom="11dp"
+        android:layout_above="@+id/radioReasons"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView9"
-        android:layout_above="@+id/textView8"
-        android:layout_toLeftOf="@+id/uploadbabyid"
-        android:layout_toStartOf="@+id/uploadbabyid" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:text="婴儿昵称："
@@ -225,22 +120,152 @@
         android:textColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView9"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:id="@+id/textView10"
-        android:layout_alignRight="@+id/textView9"
-        android:layout_alignEnd="@+id/textView9" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
+        android:text="婴儿编号："
+        android:textSize="45px"
+        android:textColor="#000000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView9"
+        android:layout_alignBaseline="@+id/uploadbabyid"
+        android:layout_alignBottom="@+id/uploadbabyid"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/babyname"
+        android:layout_toStartOf="@+id/babyname" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="未选择"
         android:textSize="45px"
         android:gravity="center_vertical|right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/babyname"
+        android:ems="10"
+        android:id="@+id/uploadbabyid"
+        android:layout_above="@+id/babyname"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/textView10" />
+        android:layout_toRightOf="@+id/textView10"
+        android:layout_toEndOf="@+id/textView10" />
+
+    <Button
+        android:text="选择婴儿"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button3"
+        android:onClick="search"
+        android:layout_alignTop="@+id/spinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="上传"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uploadrecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="upload_click"
+        android:layout_alignTop="@+id/spinner"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/playrecording"
+        android:layout_alignStart="@+id/playrecording" />
+
+    <Button
+        android:text="停止录音"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stoprecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="onClick"
+        android:layout_above="@+id/spinner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:text="播放录音"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playrecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="onClick"
+        android:layout_alignBaseline="@+id/stoprecording"
+        android:layout_alignBottom="@+id/stoprecording"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="开始录音"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startrecording"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="onClick"
+        android:layout_alignBaseline="@+id/stoprecording"
+        android:layout_alignBottom="@+id/stoprecording"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:entries="@array/date"
+        android:layout_marginBottom="38dp"
+        android:layout_above="@+id/uploadbabyid"
+        android:layout_alignLeft="@+id/stoprecording"
+        android:layout_alignStart="@+id/stoprecording" />
+
+    <Button
+        android:text="新建档案"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newfile"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="newfile"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:text="数据统计"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/data"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="data"
+        android:layout_alignBaseline="@+id/newfile"
+        android:layout_alignBottom="@+id/newfile"
+        android:layout_alignLeft="@+id/stoprecording"
+        android:layout_alignStart="@+id/stoprecording" />
+
+    <Button
+        android:text="说明"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/readme"
+        android:background="@color/colorPrimary"
+        android:textSize="4mm"
+        android:onClick="readme"
+        android:layout_alignBaseline="@+id/data"
+        android:layout_alignBottom="@+id/data"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/playrecording"
+        android:layout_alignStart="@+id/playrecording" />
 
 </RelativeLayout>
